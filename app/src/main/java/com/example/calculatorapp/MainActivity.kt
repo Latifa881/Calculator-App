@@ -1,5 +1,6 @@
 package com.example.calculatorapp
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -30,6 +31,30 @@ class MainActivity : AppCompatActivity() {
     lateinit var textView: TextView
     fun getButtonValue(bt: Button) {
         textView.text = textView.text.toString() + bt.text.toString()
+    }
+
+    fun calculate(num1: String, operation: String, num2: String): Float {
+        var result = 0f
+        when {
+            operation == "+" -> {
+                result = num1.toFloat() + num2.toFloat()
+            }
+            operation == "*" -> {
+                result = num1.toFloat() * num2.toFloat()
+            }
+            operation == "-" -> {
+                result = num1.toFloat() - num2.toFloat()
+            }
+            operation == "/" -> {
+                if (num2 != "0") {
+                    result = num1.toFloat() / num2.toFloat()
+                } else {
+                    result = 0f
+                }
+
+            }
+        }
+        return result
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +103,7 @@ class MainActivity : AppCompatActivity() {
         btAdd.setOnClickListener { getButtonValue(btAdd) }
         btDEL.setOnClickListener {
             if (textView.text.toString().length > 0)
-                if ((textView.text.toString())[0].isDigit())
+              //Delete last character was it a number, operator digit
                     textView.text = textView.text.substring(0, textView.text.toString().length - 1)
         }
         btClear.setOnClickListener { textView.setText("") }
@@ -90,7 +115,6 @@ class MainActivity : AppCompatActivity() {
             var num2 = ""
             var result = 0f
             val expression = textView.text.toString()
-
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -114,58 +138,42 @@ class MainActivity : AppCompatActivity() {
                             isDotNum2 = true
                         }
                     }
-                    //addition/multiplication operation
-                    i == '+' || i == '*' -> {
-                        operation = i.toString()
-
-                    }
-                    //subtraction operation
-                    i == '-' -> {
-                        if (num1.isEmpty() && operation.isEmpty()) {//-3+1
-                            num1 += i
-                        } else if (operation.isEmpty()) {//3-3
-                            operation += i
-                        } else {//5+-3
-                            num2 += i
+                    else -> {// if i is operator
+                        if (operation.isEmpty() == false &&num1.isEmpty()==false && num2.isEmpty()==false) {//if I have multiple operations
+                            num1 = calculate(num1, operation, num2).toString()
+                            operation=""
+                            num2=""
                         }
-                    }
-                    //division
-                    i == '/' -> {
-                        if (num1.isEmpty()) {
-                            num1 = "0"
-                        }
-                        operation += '/'
+                            //addition/multiplication operation
+                            if (i == '+' || i == '*') {
+                                operation = i.toString()
+                            }
+                            //subtraction operation
+                            if (i == '-') {
+                                if (num1.isEmpty() && operation.isEmpty()) {//-3+1
+                                    num1 += i
+                                } else if (operation.isEmpty()) {//3-3
+                                    operation += i
+                                } else {//5+-3
+                                    num2 += i
+                                }
+                            }
+                            //division
+                            if (i == '/') {
+                                if (num1.isEmpty()) {
+                                    num1 = "0"
+                                }
+                                operation += '/'
 
-                    }
+                            }
+                        }
 
                 }
 
             }
-
-            when {
-                operation == "+" -> {
-                    result = num1.toFloat() + num2.toFloat()
-                }
-                operation == "*" -> {
-                    result = num1.toFloat() * num2.toFloat()
-                }
-                operation == "-" -> {
-                    result = num1.toFloat() - num2.toFloat()
-                }
-                operation == "/" -> {
-                    if (num2 != "0") {
-                        result = num1.toFloat() / num2.toFloat()
-                    } else {
-                        result = 0f
-                    }
-
-                }
-                else -> {//9=9
-                    if (textView.text.toString()[0].isDigit())
-                        result = textView.text.toString().toFloat()
-                }
-            }
-            textView.text = result.toString()
+            if(operation.isEmpty()==false&& num1.isEmpty()==false && num2.isEmpty()==false)
+            { result = calculate(num1, operation, num2)
+            textView.text = result.toString()}
 
 //////////////////////////////////////////////////
         }

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 
 class MainActivity : AppCompatActivity() {
+
     lateinit var bt9: Button
     lateinit var bt8: Button
     lateinit var bt7: Button
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var btClear: Button
     lateinit var btEqual: Button
     lateinit var textView: TextView
+
     fun getButtonValue(bt: Button) {
         textView.text = textView.text.toString() + bt.text.toString()
     }
